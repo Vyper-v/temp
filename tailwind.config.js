@@ -1,5 +1,5 @@
 module.exports = {
-  content: ['./src/desafios/desafio6/**/*.pug'],
+  content: ['./src/**/*.pug'],
   theme: {
     extend: {},
   },

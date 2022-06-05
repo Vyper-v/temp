@@ -1,4 +1,5 @@
 // Dependecies
+const path = require('path');
 const http = require('http')
 const express = require('express')
 const { Server } = require('socket.io')
@@ -11,13 +12,13 @@ const io = new Server(server)
 const productosController = new ApiController('./productos.json')
 const chatsController = new ApiController('./chat.json')
 const port = process.env.PORT || 8080
-app.set('views', './views')
+app.set('views', path.join(__dirname,'views'))
 app.set('view engine', 'pug')
 
 // Middlewares
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.use(express.static('public'))
+app.use(express.static(path.join(__dirname,'public')))
 
 // Routes
 app.use('/chats', chatsController.route)

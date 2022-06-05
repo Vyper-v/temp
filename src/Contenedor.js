@@ -1,10 +1,13 @@
-const writeFile = require('fs/promises').writeFile;
-const readFile = require('fs/promises').readFile;
-const access = require('fs/promises').access;
-const constants = require('fs').constants;
+const { writeFile, readFile, access } = require('fs/promises')
+const constants = require('fs').constants
 
 class Contenedor {
   constructor(fileName) {
+    ;(async () => {
+      if ((await this.fileExists()) === false) {
+        await writeFile(fileName, '[]')
+      }
+    })()
     this.file = fileName
     this.lastId = 0
   }
