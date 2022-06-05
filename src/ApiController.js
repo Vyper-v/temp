@@ -1,19 +1,21 @@
 const Contenedor = require('./Contenedor.js')
+const path = require("path")
 const fs = require('fs/promises')
 const multer = require('multer')
 const express = require('express')
 
 class ContenedorController {
   constructor(file, destination = 'public/thumbnails', redirect = false) {
-    fs.mkdir(destination, { recursive: true })
+    this.destination = path.join(__dirname,destination)
+    fs.mkdir(this.destination, { recursive: true })
     this.route = express.Router()
-    this.route.use(express.static(destination.split('/')[0]))
+    this.route.use(express.static(path.join(__dirname,destination.split('/')[0])))
     this.route.use(express.json())
     this.route.use(express.urlencoded({ extended: true }))
     this.contenedor = new Contenedor(file)
     this.storage = multer.diskStorage({
       destination: (req, file, cb) => {
-        cb(null, destination)
+        cb(null, this.destination)
       },
       filename: (req, file, cb) => {
         cb(
@@ -54,7 +56,7 @@ class ContenedorController {
       const file = req.file
       const parsedProduct = { ...producto }
       if (file) {
-        parsedProduct.thumbnail = file.path.replace('public', '')
+        parsedProduct.thumbnail = file.path.replace(/(.*?)public/, '');
       }
       const id = await this.contenedor.save(parsedProduct)
       if (redirect === true) {
